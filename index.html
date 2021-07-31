@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div><p onclick="sendClick()">发送ajax</p><p onclick="cancelClick()">取消ajax</p></div>
+    <script src="./axios.js"></script>
+    <script>
+        axios.interceptors.request.use(function(config){
+            console.log("请求拦截");
+            return config;
+        })
+        axios.interceptors.response.use(function(config){
+            console.log("响应拦截");
+            return config;
+        })
+        var cencel;
+        function sendClick(){
+            axios({
+                url:"http://localhost:3000/home",
+                method:"get",
+                data:{a:123},
+                cancelToken: new axios.CancelToken(function(c){
+                    cencel = c;
+                })
+            }).then(function(response){
+                console.log(response);
+            })
+        }
+        function cancelClick(){
+            cencel();
+        }
+    </script>
+</body>
+</html>
